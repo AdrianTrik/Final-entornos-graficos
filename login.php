@@ -6,8 +6,12 @@
 </head>
 <body>
 <?php
+	//Inicializo la sesion
+	session_start();
+	
 	$username = $_POST['username'];
 	$password = $_POST['password'];
+	
 	//Establezco la conexion con la BD
 	$link = mysqli_connect("localhost", "root");
 	mysqli_select_db($link,"atom");
@@ -29,7 +33,8 @@
 	mysqli_close($link);
 	//Verifico el password
 	if ($password == $colPassword) {
-		echo('Usuario logueado correctamente');
+		$_SESSION['username']=$username;
+		header("location: home.php");
 	}
 	else {
 		echo('Usuario y/o contraseña inexistentes');

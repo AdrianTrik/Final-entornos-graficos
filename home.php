@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+	session_start();
+?>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,30 +37,40 @@
     <div class="collapse navbar-collapse" id="topFixedNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Inicio<span class="sr-only">(current)</span></a></li>
-        <li><a href="productos.html">Productos</a></li>
-        <li><a href="carrito.html">Carrito</a></li>
+        <li><a href="productos.php">Productos</a></li>
+        <li><a href="carrito.php">Carrito</a></li>
         <li><a href="contacto.html">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-log-in"></span> Login <strong class="caret"></strong>
-          </a>
-		  <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-		    <form method="post" action="login.php" accept-charset="UTF-8">
-			  <input style="margin-bottom: 15px;" type="text" placeholder="Username" 
-              id="username" name="username">
-			  <input style="margin-bottom: 15px;" type="password" placeholder="Password" 
-              id="password" name="password">
-			  <input style="float: left; margin-right: 10px;" type="checkbox" name="remember-me" 
-              id="remember-me" value="1">
-			  <label class="string optional" for="user_remember_me"> Remember me</label>
-			  <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In"
-              style="margin-bottom: 15px;">
-			</form>
-		  </div>
-		</li>
+        <?php
+		  if (!isset($_SESSION['username'])) {
+		?>
+          <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-log-in"></span> Login <strong class="caret"></strong>
+            </a>
+            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+              <form method="post" action="login.php" accept-charset="UTF-8">
+                <input style="margin-bottom: 15px;" type="text" placeholder="Username" 
+                id="username" name="username">
+                <input style="margin-bottom: 15px;" type="password" placeholder="Password" 
+                id="password" name="password">
+                <input style="float: left; margin-right: 10px;" type="checkbox" name="remember-me" 
+                id="remember-me" value="1">
+                <label class="string optional" for="user_remember_me"> Remember me</label>
+                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In"
+                style="margin-bottom: 15px;">
+              </form>
+            </div>
+          </li>
+        <?php
+		  } else {
+		?>
+          <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        <?php
+		  }
+		?>
       </ul>
     </div>
     <!-- /.navbar-collapse -->
@@ -90,7 +103,15 @@
         </div>
       </div>
     </div>
-    <a class="left carousel-control" href="#carousel1" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span><span class="sr-only">Previous</span></a><a class="right carousel-control" href="#carousel1" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span><span class="sr-only">Next</span></a></div>
+      <a class="left carousel-control" href="#carousel1" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#carousel1" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
   
   <footer class="footer">
     <div class="row">
@@ -98,8 +119,8 @@
           <h3>Mapa del sitio</h3>
           <ul>
             <li><a href="#">Inicio</a></li>
-            <li><a href="productos.html">Productos</a></li>
-            <li><a href="carrito.html">Carrito</a></li>
+            <li><a href="productos.php">Productos</a></li>
+            <li><a href="carrito.php">Carrito</a></li>
             <li><a href="contacto.html">Contacto</a></li>
           </ul>
       </div>
