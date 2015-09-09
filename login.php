@@ -7,37 +7,33 @@
 <body>
 <?php
 	$username = $_POST['username'];
-	$pass = $_POST['password'];
+	$password = $_POST['password'];
+	//Establezco la conexion con la BD
 	$link = mysqli_connect("localhost", "root");
 	mysqli_select_db($link,"atom");
-	$vSql = "SELECT * FROM usuario";
-	$vResultado = mysqli_query($link, $vSql);
-	$total_registros=mysqli_num_rows($vResultado);
+	//Defino la consulta
+	$query = "select password from usuarios where username=?";
+	//Preparo la consulta
+	$stmt = mysqli_prepare($link, $query);
+	//Enlazo los parametros
+	mysqli_stmt_bind_param($stmt, 's', $username);
+	//Ejecuto la consulta
+	mysqli_stmt_execute($stmt);
+	//Enlazo las variables resultantes
+	mysqli_stmt_bind_result($stmt, $colPassword);
+	//Recupero el valor
+	mysqli_stmt_fetch($stmt);
+	//Cierro la consulta
+	mysqli_stmt_close($stmt);
+	//Cierro la conexion
+	mysqli_close($link);
+	//Verifico el password
+	if ($password == $colPassword) {
+		echo('Usuario logueado correctamente');
+	}
+	else {
+		echo('Usuario y/o contraseña inexistentes');
+	}
 ?>
-<table border=1>
-		<tr>
-			<td><b>Usuario</b></td>
-			<td><b>Password</b></td>
-		</tr>
-		<?php
-		while ($fila = mysqli_fetch_array($vResultado))
-		{
-		?>
-		<tr>
-			<td><?php echo ($fila['username']); ?></td>
-			<td><?php echo ($fila['pass']); ?></td>
-		</tr>
-		<tr>
-			<td colspan="5">
-				<?php
-				}
-				// Liberar conjunto de resultados
-				mysqli_free_result($vResultado);
-				// Cerrar la conexion
-				mysqli_close($link);
-				?>
-			</td>
-		</tr>
-	</table>
 </body>
 </html>
