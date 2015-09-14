@@ -121,11 +121,18 @@
 <div class="container-fluid">
   <!--Categorias-->
   <?php
+<<<<<<< HEAD
 	$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
   	//Establezco la conexion con la BD
 	$link = mysqli_connect("localhost", "root");
 	mysqli_select_db($link,"atom");
 	$query = "select id, nombre from categorias";
+=======
+  	//Establezco la conexion con la BD
+	$link = mysqli_connect("localhost", "root");
+	mysqli_select_db($link,"atom");
+	$query = "select nombre from categorias";
+>>>>>>> origin/master
 	//Recupero las categorias
 	$result = mysqli_query($link, $query);
   ?>
@@ -134,6 +141,7 @@
   	<ul class="nav nav-sidebar">
     <?php
 	  while ($fila = mysqli_fetch_array($result)) {
+<<<<<<< HEAD
 		  if ($fila['id']==$categoria) {
 			  echo"<li class='active'>
 			  		 <a href='productos.php?categoria=".$fila['id']."'>". $fila['nombre']. "</a>
@@ -142,6 +150,9 @@
 		  else {
 			  echo"<li><a href='productos.php?categoria=".$fila['id']."'>". $fila['nombre']. "</a></li>";
 		  }
+=======
+		  echo"<li><a href='#'>". $fila['nombre']. "</a></li>";
+>>>>>>> origin/master
 	  }
 	  //Libero el conjunto de resultados
 	  mysqli_free_result($result);
@@ -188,6 +199,7 @@
         <?php
           for($i=1; $i<=$totalPaginas; $i++) {
               if ($i==$pagina) {
+<<<<<<< HEAD
                   echo"<li class='active'>
 				  <a href='productos.php?categoria=". $categoria. "&pagina=" . $i ."'>" . $i . "</a>
 				  </li>";
@@ -195,6 +207,11 @@
                   echo"<li>
 				  <a href='productos.php?categoria=". $categoria. "&pagina=" . $i ."'>" . $i . "</a>
 				  </li>";
+=======
+                  echo"<li class='active'><a href='productos.php?pagina=" . $i ."'>" . $i . "</a></li>";
+              } else {
+                  echo"<li><a href='productos.php?pagina=" . $i ."'>" . $i . "</a></li>";
+>>>>>>> origin/master
               }
           }
         ?>      
@@ -203,6 +220,7 @@
     </nav>  
 	<?php
       //Mostrar pagina
+<<<<<<< HEAD
 	  if (!$categoria) {
 		  $query = "select nombre, precio from productos limit ". $inicio. ",". $cantidadPorPagina;
 	  }
@@ -214,6 +232,9 @@
 		  on pc.idProducto=p.id
 		  where c.id=". $categoria. " limit ". $inicio. ",". $cantidadPorPagina;
 	  }
+=======
+      $query = "select nombre, precio, detalle from productos limit ". $inicio. ",". $cantidadPorPagina;
+>>>>>>> origin/master
       $result = mysqli_query($link, $query);
       $cantidadProductos = mysqli_num_rows($result);
     ?>
@@ -246,9 +267,14 @@
     </div>
   </div>
 </div>
+<<<<<<< HEAD
 
 <div class="container">
   <footer class="footer well">
+=======
+<div class="container">
+  <footer class="footer">
+>>>>>>> origin/master
     <div class="row">
       <div class="col-md-4">
           <h3>Mapa del sitio</h3>
