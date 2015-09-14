@@ -10,8 +10,7 @@
 <title>Jugueteria Atom</title>
 
 <!-- Bootstrap -->
-<!-- <link href="css/bootstrap.css" rel="stylesheet"> -->
-<link href="css/bootstrap-3.3.4.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap.css" rel="stylesheet">
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,29 +18,8 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
-<style>
-  /* Sidebar navigation */
-  .nav-sidebar {
-	margin-top: 33px;
-	margin-right: -21px; /* 20px padding + 1px border */
-	margin-bottom: 20px;
-	margin-left: -20px;
-  }
-  .nav-sidebar > li > a {
-	padding-right: 20px;
-	padding-left: 20px;
-  }
-  .nav-sidebar > .active > a,
-  .nav-sidebar > .active > a:hover,
-  .nav-sidebar > .active > a:focus {
-	color: #fff;
-	background-color: #428bca;
-  }
-</style>
 </head>
 <body style="padding-top: 70px">
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -59,8 +37,8 @@
     <div class="collapse navbar-collapse" id="topFixedNavbar">
       <ul class="nav navbar-nav">
         <li><a href="home.php">Inicio</a></li>
-        <li class="active"><a href="productos.php">Productos<span class="sr-only">(current)</span></a></li>
-        <li><a href="carrito.php">Carrito</a></li>
+        <li><a href="productos.php">Productos</a></li>
+        <li class="active"><a href="#">Carrito<span class="sr-only">(current)</span></a></li>
         <li><a href="contacto.php">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -118,144 +96,18 @@
   <!-- /.container-fluid -->
 </nav>
 
-<div class="container-fluid">
-  <!--Categorias-->
-  <?php
-	$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
-  	//Establezco la conexion con la BD
-	$link = mysqli_connect("localhost", "root");
-	mysqli_select_db($link,"atom");
-	$query = "select id, nombre from categorias";
-	//Recupero las categorias
-	$result = mysqli_query($link, $query);
-  ?>
-  <div class="col-md-2 sidebar">
-  	<h3>Categorias</h3>
-  	<ul class="nav nav-sidebar">
-    <?php
-	  while ($fila = mysqli_fetch_array($result)) {
-		  if ($fila['id']==$categoria) {
-			  echo"<li class='active'>
-			  		 <a href='productos.php?categoria=".$fila['id']."'>". $fila['nombre']. "</a>
-				   </li>";
-		  }
-		  else {
-			  echo"<li><a href='productos.php?categoria=".$fila['id']."'>". $fila['nombre']. "</a></li>";
-		  }
-	  }
-	  //Libero el conjunto de resultados
-	  mysqli_free_result($result);
-	  //Cierro la conexion
-	  mysqli_close($link);
-	?>
-    </ul>
-  </div>
-  <?php
-	//Paginacion
-	$cantidadPorPagina = 8;
-	$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : null;
-	if (!$pagina) {
-		$inicio = 0;
-		$pagina = 1;
-	}
-	else {
-		$inicio = ($pagina - 1)*$cantidadPorPagina;
-	}
-	//Establezco la conexion con la BD
-	$link = mysqli_connect("localhost", "root");
-	mysqli_select_db($link,"atom");
-	//Calculo el total de registros
-	if (!$categoria) {
-		$query = "select id from productos";
-	}
-	else {
-		$query = "select pc.idProducto from categorias c 
-		inner join producto_categoria pc 
-		on c.id=pc.idCategoria
-		where c.id=". $categoria;
-	}
-	$result = mysqli_query($link, $query);
-	$totalProductos = mysqli_num_rows($result);	
-	//Calculo el total de paginas
-	$totalPaginas = ceil($totalProductos/$cantidadPorPagina);
-  ?>
-  <div class="col-md-10">
-    <!--Barra de paginacion-->
-    <nav>
-      <!-- Add class .pagination-lg for larger blocks or .pagination-sm for smaller blocks-->
-      <ul class="pagination">
-        <li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-        <?php
-          for($i=1; $i<=$totalPaginas; $i++) {
-              if ($i==$pagina) {
-                  echo"<li class='active'>
-				  <a href='productos.php?categoria=". $categoria. "&pagina=" . $i ."'>" . $i . "</a>
-				  </li>";
-              } else {
-                  echo"<li>
-				  <a href='productos.php?categoria=". $categoria. "&pagina=" . $i ."'>" . $i . "</a>
-				  </li>";
-              }
-          }
-        ?>      
-        <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-      </ul>
-    </nav>  
-	<?php
-      //Mostrar pagina
-	  if (!$categoria) {
-		  $query = "select nombre, precio from productos limit ". $inicio. ",". $cantidadPorPagina;
-	  }
-	  else {
-		  $query = "select p.nombre, p.precio from categorias c 
-		  inner join producto_categoria pc 
-		  on c.id=pc.idCategoria 
-		  inner join productos p
-		  on pc.idProducto=p.id
-		  where c.id=". $categoria. " limit ". $inicio. ",". $cantidadPorPagina;
-	  }
-      $result = mysqli_query($link, $query);
-      $cantidadProductos = mysqli_num_rows($result);
-    ?>
-    <!--Productos-->
-    <div class="row">
-      <?php
-        while ($fila = mysqli_fetch_array($result)) {
-      ?>
-      <div class="col-md-3">
-        <div class="thumbnail"><img src="images/productos/<?php echo($fila['nombre']);?>.png" 
-        alt="<?php echo($fila['nombre']);?>">
-          <div class="caption">
-            <h3><?php echo($fila['nombre']);?></h3>
-            <p>
-              <a href="#" class="btn btn-default" role="button">Detalle</a>
-              <a href="#" class="btn btn-primary" role="button">
-                <span class="glyphicon glyphicon-shopping-cart"></span> Agregar
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-      <?php
-        }
-        //Libero el conjunto de resultados
-        mysqli_free_result($result);
-        //Cierro la conexion
-        mysqli_close($link);
-      ?>
-    </div>
-  </div>
-</div>
+
 
 <div class="container">
+
   <footer class="footer well">
     <div class="row">
       <div class="col-md-4">
           <h3>Mapa del sitio</h3>
           <ul>
             <li><a href="home.php">Inicio</a></li>
-            <li><a href="#">Productos</a></li>
-            <li><a href="carrito.php">Carrito</a></li>
+            <li><a href="productos.php">Productos</a></li>
+            <li><a href="#">Carrito</a></li>
             <li><a href="contacto.php">Contacto</a></li>
           </ul>
       </div>
@@ -277,10 +129,10 @@
       </div>
     </div>
   </footer>
+  
 </div>
 
 <script src="js/jquery-1.11.2.min.js" type="text/javascript"></script>
-<!-- <script src="js/bootstrap.js" type="text/javascript"></script> -->
-<script src="js/bootstrap-3.3.4.js" type="text/javascript"></script>
+<script src="js/bootstrap.js" type="text/javascript"></script>
 </body>
 </html>

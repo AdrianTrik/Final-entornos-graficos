@@ -39,13 +39,31 @@
         <li class="active"><a href="#">Inicio<span class="sr-only">(current)</span></a></li>
         <li><a href="productos.php">Productos</a></li>
         <li><a href="carrito.php">Carrito</a></li>
-        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="contacto.php">Contacto</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
 		  if (!isset($_SESSION['username'])) {
 		?>
-          <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+          <li class="dropdown">
+          	<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-user"></span> Sign Up <strong class="caret"></strong>
+            </a>
+            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+              <form method="post" action="login.php" accept-charset="UTF-8">
+                <input style="margin-bottom: 15px;" type="text" placeholder="Username" 
+                id="username" name="username">
+                <input style="margin-bottom: 15px;" type="text" placeholder="Email" 
+                id="email" name="email">
+                <input style="margin-bottom: 15px;" type="password" placeholder="Password" 
+                id="password" name="password">
+                <input style="margin-bottom: 15px;" type="password" placeholder="Password" 
+                id="re-password" name="re-password">
+                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Registrarse"
+                style="margin-bottom: 15px;">
+              </form>
+            </div>
+          </li>
           <li class="dropdown">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">
               <span class="glyphicon glyphicon-log-in"></span> Login <strong class="caret"></strong>
@@ -59,7 +77,7 @@
                 <input style="float: left; margin-right: 10px;" type="checkbox" name="remember-me" 
                 id="remember-me" value="1">
                 <label class="string optional" for="user_remember_me"> Remember me</label>
-                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In"
+                <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Ingresar"
                 style="margin-bottom: 15px;">
               </form>
             </div>
@@ -103,17 +121,17 @@
         </div>
       </div>
     </div>
-      <a class="left carousel-control" href="#carousel1" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a class="right carousel-control" href="#carousel1" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
-    </div>
+    <a class="left carousel-control" href="#carousel1" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel1" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
   
-  <footer class="footer">
+  <footer class="footer well">
     <div class="row">
       <div class="col-md-4">
           <h3>Mapa del sitio</h3>
@@ -121,7 +139,7 @@
             <li><a href="#">Inicio</a></li>
             <li><a href="productos.php">Productos</a></li>
             <li><a href="carrito.php">Carrito</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="contacto.php">Contacto</a></li>
           </ul>
       </div>
       <div class="col-md-4">
@@ -135,7 +153,10 @@
 		  </form>
       </div>
       <div class="col-md-4">
-          <h3>Datos de contacto</h3>
+        <h3>Datos de contacto</h3>
+        <p><span class="glyphicon glyphicon-map-marker"></span> Zeballos 1341, Rosario, Argentina</p>
+        <p>+54 (0341) 448 0158</p>
+        <p>www.atom.com.ar</p>
       </div>
     </div>
   </footer>

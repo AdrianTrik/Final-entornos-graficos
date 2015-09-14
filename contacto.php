@@ -1,17 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php
-	session_start();
-?>
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jugueteria Atom</title>
 
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script>
+  var map;
+  var atom = new google.maps.LatLng(-32.95450080973386,-60.643769665033005);
+
+  function initialize() {
+	var mapDiv = document.getElementById('googleMap');
+	var mapProp = {
+	  center:atom,
+	  zoom:15,
+	  disableDefaultUI:true, 
+	  panControl:true,
+      zoomControl:true,
+	  streetViewControl:true,
+	  mapTypeId:google.maps.MapTypeId.ROADMAP
+	};
+	var map=new google.maps.Map(mapDiv,mapProp);
+	// Create a DIV to hold the control and call HomeControl()
+	var homeControlDiv = document.createElement('div');
+	var homeControl = new HomeControl(homeControlDiv, map);
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+	
+	var infowindow = new google.maps.InfoWindow({
+	  content:"Jugueteria Atom"
+	});
+	
+	var marker=new google.maps.Marker({
+	  position:mapProp.center
+	});
+  
+	marker.setMap(map);
+	
+	google.maps.event.addListener(marker,'click',function() {
+	  map.setZoom(mapProp.zoom);
+	  map.setCenter(mapProp.center);
+	  infowindow.open(map,marker);
+	});
+  }
+  
+  // Add a Home control that returns the user to London
+  function HomeControl(controlDiv, map) {
+	controlDiv.style.padding = '5px';
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = 'white';
+	controlUI.style.border='1px solid';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Ir a Atom';
+	controlDiv.appendChild(controlUI);
+	var controlText = document.createElement('div');
+	controlText.style.fontFamily='Arial,sans-serif';
+	controlText.style.fontSize='12px';
+	controlText.style.paddingLeft = '4px';
+	controlText.style.paddingRight = '4px';
+	controlText.innerHTML = '<b>Ir a Atom<b>'
+	controlUI.appendChild(controlText);
+  
+	// Setup click-event listener: simply set the map to London
+	google.maps.event.addDomListener(controlUI, 'click', function() {
+	  map.setZoom(15);
+	  map.setCenter(atom);
+	});
+  }
+  
+  google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+
 <!-- Bootstrap -->
-<!-- <link href="css/bootstrap.css" rel="stylesheet"> -->
-<link href="css/bootstrap-3.3.4.css" rel="stylesheet" type="text/css">
+<link href="css/bootstrap.css" rel="stylesheet">
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,29 +83,8 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
-<style>
-  /* Sidebar navigation */
-  .nav-sidebar {
-	margin-top: 33px;
-	margin-right: -21px; /* 20px padding + 1px border */
-	margin-bottom: 20px;
-	margin-left: -20px;
-  }
-  .nav-sidebar > li > a {
-	padding-right: 20px;
-	padding-left: 20px;
-  }
-  .nav-sidebar > .active > a,
-  .nav-sidebar > .active > a:hover,
-  .nav-sidebar > .active > a:focus {
-	color: #fff;
-	background-color: #428bca;
-  }
-</style>
 </head>
 <body style="padding-top: 70px">
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -58,10 +101,10 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="topFixedNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="home.php">Inicio</a></li>
-        <li class="active"><a href="productos.php">Productos<span class="sr-only">(current)</span></a></li>
+        <li><a href="home.php">Inicio</span></a></li>
+        <li><a href="productos.php">Productos</a></li>
         <li><a href="carrito.php">Carrito</a></li>
-        <li><a href="contacto.php">Contacto</a></li>
+        <li class="active"><a href="#">Contacto<span class="sr-only">(current)</span></a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
@@ -118,145 +161,50 @@
   <!-- /.container-fluid -->
 </nav>
 
-<div class="container-fluid">
-  <!--Categorias-->
-  <?php
-	$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : null;
-  	//Establezco la conexion con la BD
-	$link = mysqli_connect("localhost", "root");
-	mysqli_select_db($link,"atom");
-	$query = "select id, nombre from categorias";
-	//Recupero las categorias
-	$result = mysqli_query($link, $query);
-  ?>
-  <div class="col-md-2 sidebar">
-  	<h3>Categorias</h3>
-  	<ul class="nav nav-sidebar">
-    <?php
-	  while ($fila = mysqli_fetch_array($result)) {
-		  if ($fila['id']==$categoria) {
-			  echo"<li class='active'>
-			  		 <a href='productos.php?categoria=".$fila['id']."'>". $fila['nombre']. "</a>
-				   </li>";
-		  }
-		  else {
-			  echo"<li><a href='productos.php?categoria=".$fila['id']."'>". $fila['nombre']. "</a></li>";
-		  }
-	  }
-	  //Libero el conjunto de resultados
-	  mysqli_free_result($result);
-	  //Cierro la conexion
-	  mysqli_close($link);
-	?>
-    </ul>
-  </div>
-  <?php
-	//Paginacion
-	$cantidadPorPagina = 8;
-	$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : null;
-	if (!$pagina) {
-		$inicio = 0;
-		$pagina = 1;
-	}
-	else {
-		$inicio = ($pagina - 1)*$cantidadPorPagina;
-	}
-	//Establezco la conexion con la BD
-	$link = mysqli_connect("localhost", "root");
-	mysqli_select_db($link,"atom");
-	//Calculo el total de registros
-	if (!$categoria) {
-		$query = "select id from productos";
-	}
-	else {
-		$query = "select pc.idProducto from categorias c 
-		inner join producto_categoria pc 
-		on c.id=pc.idCategoria
-		where c.id=". $categoria;
-	}
-	$result = mysqli_query($link, $query);
-	$totalProductos = mysqli_num_rows($result);	
-	//Calculo el total de paginas
-	$totalPaginas = ceil($totalProductos/$cantidadPorPagina);
-  ?>
-  <div class="col-md-10">
-    <!--Barra de paginacion-->
-    <nav>
-      <!-- Add class .pagination-lg for larger blocks or .pagination-sm for smaller blocks-->
-      <ul class="pagination">
-        <li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-        <?php
-          for($i=1; $i<=$totalPaginas; $i++) {
-              if ($i==$pagina) {
-                  echo"<li class='active'>
-				  <a href='productos.php?categoria=". $categoria. "&pagina=" . $i ."'>" . $i . "</a>
-				  </li>";
-              } else {
-                  echo"<li>
-				  <a href='productos.php?categoria=". $categoria. "&pagina=" . $i ."'>" . $i . "</a>
-				  </li>";
-              }
-          }
-        ?>      
-        <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-      </ul>
-    </nav>  
-	<?php
-      //Mostrar pagina
-	  if (!$categoria) {
-		  $query = "select nombre, precio from productos limit ". $inicio. ",". $cantidadPorPagina;
-	  }
-	  else {
-		  $query = "select p.nombre, p.precio from categorias c 
-		  inner join producto_categoria pc 
-		  on c.id=pc.idCategoria 
-		  inner join productos p
-		  on pc.idProducto=p.id
-		  where c.id=". $categoria. " limit ". $inicio. ",". $cantidadPorPagina;
-	  }
-      $result = mysqli_query($link, $query);
-      $cantidadProductos = mysqli_num_rows($result);
-    ?>
-    <!--Productos-->
-    <div class="row">
-      <?php
-        while ($fila = mysqli_fetch_array($result)) {
-      ?>
-      <div class="col-md-3">
-        <div class="thumbnail"><img src="images/productos/<?php echo($fila['nombre']);?>.png" 
-        alt="<?php echo($fila['nombre']);?>">
-          <div class="caption">
-            <h3><?php echo($fila['nombre']);?></h3>
-            <p>
-              <a href="#" class="btn btn-default" role="button">Detalle</a>
-              <a href="#" class="btn btn-primary" role="button">
-                <span class="glyphicon glyphicon-shopping-cart"></span> Agregar
-              </a>
-            </p>
-          </div>
+<div class="container well">
+
+  <div class="col-md-5">
+    <h2>Envianos un mensaje</h2>
+    <hr>
+      <form role="form" method="post" action="constula" accept-charset="utf-8">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" class="form-control" id="nombre">
         </div>
-      </div>
-      <?php
-        }
-        //Libero el conjunto de resultados
-        mysqli_free_result($result);
-        //Cierro la conexion
-        mysqli_close($link);
-      ?>
-    </div>
+        <div class="form-group">
+          <label for="telefono">Telefono:</label>
+          <input type="text" class="form-control" id="telefono">
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" class="form-control" id="email">
+        </div>
+        <div class="form-group">
+          <label for="consulta">Consulta:</label>
+          <textarea class="form-control" rows="5" id="consulta"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </form>
   </div>
+  
+  <div class="col-md-7">
+    <h2>Donde estamos</h2>
+    <hr>
+    <div id="googleMap" style="width:500px;height:380px;"></div>
+  </div>
+  
 </div>
 
-<div class="container">
-  <footer class="footer well">
+<div class="container well">
+  <footer class="footer">
     <div class="row">
       <div class="col-md-4">
           <h3>Mapa del sitio</h3>
           <ul>
             <li><a href="home.php">Inicio</a></li>
-            <li><a href="#">Productos</a></li>
+            <li><a href="productos.php">Productos</a></li>
             <li><a href="carrito.php">Carrito</a></li>
-            <li><a href="contacto.php">Contacto</a></li>
+            <li><a href="#">Contacto</a></li>
           </ul>
       </div>
       <div class="col-md-4">
@@ -280,7 +228,6 @@
 </div>
 
 <script src="js/jquery-1.11.2.min.js" type="text/javascript"></script>
-<!-- <script src="js/bootstrap.js" type="text/javascript"></script> -->
-<script src="js/bootstrap-3.3.4.js" type="text/javascript"></script>
+<script src="js/bootstrap.js" type="text/javascript"></script>
 </body>
 </html>
