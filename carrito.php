@@ -43,7 +43,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
-		  if (!isset($_SESSION['username'])) {
+		  if (!isset($_SESSION['id'])) {
 		?>
           <li class="dropdown">
           	<a class="dropdown-toggle" href="#" data-toggle="dropdown">
@@ -96,10 +96,36 @@
   <!-- /.container-fluid -->
 </nav>
 
-
+<div class="container">
+<?php
+  if (isset($_SESSION['id'])) {
+	$id = $_SESSION['id'];
+	//Establezco la conexion con la BD
+	$link = mysqli_connect("localhost", "root");
+	mysqli_select_db($link,"atom");
+	$query = "select p.nombre, c.cantidad 
+	  from carrito c
+	  inner join productos p
+	  on c.id_producto=p.id
+	  where id_usuario=".$id;
+	$result = mysqli_query($link, $query);
+	?>
+	<table class="table-striped">
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+      </tr>
+	<?php while ($fila = mysqli_fetch_array($result)) {?>
+    <tr>
+      <td><?php echo($fila['nombre']);?></td>
+      <td><?php echo($fila['cantidad']);?></td>
+    </tr>
+	<?php } ?>
+	</table>
+  <?php } ?>
+</div>
 
 <div class="container">
-
   <footer class="footer well">
     <div class="row">
       <div class="col-md-4">
@@ -129,7 +155,6 @@
       </div>
     </div>
   </footer>
-  
 </div>
 
 <script src="js/jquery-1.11.2.min.js" type="text/javascript"></script>

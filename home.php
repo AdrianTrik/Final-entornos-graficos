@@ -43,14 +43,14 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
-		  if (!isset($_SESSION['username'])) {
+		  if (!isset($_SESSION['id'])) {
 		?>
           <li class="dropdown">
           	<a class="dropdown-toggle" href="#" data-toggle="dropdown">
               <span class="glyphicon glyphicon-user"></span> Sign Up <strong class="caret"></strong>
             </a>
             <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-              <form method="post" action="login.php" accept-charset="UTF-8">
+              <form method="post" action="signUp.php" accept-charset="UTF-8">
                 <input style="margin-bottom: 15px;" type="text" placeholder="Username" 
                 id="username" name="username">
                 <input style="margin-bottom: 15px;" type="text" placeholder="Email" 
@@ -59,6 +59,9 @@
                 id="password" name="password">
                 <input style="margin-bottom: 15px;" type="password" placeholder="Password" 
                 id="re-password" name="re-password">
+                <input style="float: left; margin-right: 10px;" type="checkbox" name="newsletter"
+                       id="newsletter" value="1">
+                <label class="string optional" for="user_newsletter"> Newsletter</label>
                 <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Registrarse"
                 style="margin-bottom: 15px;">
               </form>

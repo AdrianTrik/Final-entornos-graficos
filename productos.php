@@ -65,7 +65,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
-		  if (!isset($_SESSION['username'])) {
+		  if (!isset($_SESSION['id'])) {
 		?>
           <li class="dropdown">
           	<a class="dropdown-toggle" href="#" data-toggle="dropdown">
@@ -204,10 +204,10 @@
 	<?php
       //Mostrar pagina
 	  if (!$categoria) {
-		  $query = "select nombre, precio from productos limit ". $inicio. ",". $cantidadPorPagina;
+		  $query = "select id, nombre, precio from productos limit ". $inicio. ",". $cantidadPorPagina;
 	  }
 	  else {
-		  $query = "select p.nombre, p.precio from categorias c 
+		  $query = "select p.id, p.nombre, p.precio from categorias c 
 		  inner join producto_categoria pc 
 		  on c.id=pc.idCategoria 
 		  inner join productos p
@@ -229,7 +229,7 @@
             <h3><?php echo($fila['nombre']);?></h3>
             <p>
               <a href="#" class="btn btn-default" role="button">Detalle</a>
-              <a href="#" class="btn btn-primary" role="button">
+              <a href="agregarProducto.php?id=<?php echo($fila['id']);?>" class="btn btn-primary" role="button">
                 <span class="glyphicon glyphicon-shopping-cart"></span> Agregar
               </a>
             </p>

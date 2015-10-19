@@ -108,7 +108,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
-		  if (!isset($_SESSION['username'])) {
+		  if (!isset($_SESSION['id'])) {
 		?>
           <li class="dropdown">
           	<a class="dropdown-toggle" href="#" data-toggle="dropdown">

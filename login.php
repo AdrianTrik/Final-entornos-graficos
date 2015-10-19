@@ -16,7 +16,7 @@
 	$link = mysqli_connect("localhost", "root");
 	mysqli_select_db($link,"atom");
 	//Defino la consulta
-	$query = "select password from usuarios where username=?";
+	$query = "select id, password from usuarios where username=?";
 	//Preparo la consulta
 	$stmt = mysqli_prepare($link, $query);
 	//Enlazo los parametros
@@ -24,7 +24,7 @@
 	//Ejecuto la consulta
 	mysqli_stmt_execute($stmt);
 	//Enlazo las variables resultantes
-	mysqli_stmt_bind_result($stmt, $colPassword);
+	mysqli_stmt_bind_result($stmt, $id, $colPassword);
 	//Recupero el valor
 	mysqli_stmt_fetch($stmt);
 	//Cierro la consulta
@@ -33,7 +33,7 @@
 	mysqli_close($link);
 	//Verifico el password
 	if ($password == $colPassword) {
-		$_SESSION['username']=$username;
+		$_SESSION['id']=$id;
 		header("location: home.php");
 	}
 	else {
